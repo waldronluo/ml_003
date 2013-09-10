@@ -17,11 +17,27 @@ grad = zeros(size(theta));
 %               Compute the partial derivatives and set grad to the partial
 %               derivatives of the cost w.r.t. each parameter in theta
 
+% Hyprophsis Function
+function h = H (X, theta)
+    h = sigmoid(X * theta);
+end
+% End of Hyprophsis Function
+
+for j = 1:size(theta) 
+    Sum = 0;
+    for i = 1:m
+        Sum += (H(X(i,:), theta) - y(i)) * X(i,j);
+    endfor
+    grad(j) = Sum / m + (j != 1) * lambda * theta(j) / m;
+endfor
 
 
-
-
-
+Sum = 0;
+for i = 1:m 
+    Sum += ( -y(i)*log(H( X(i,:), theta)) - (1 - y(i))*log(1 - H(X(i,:), theta)));    
+endfor
+J = Sum / m + lambda * (theta' * theta) / (2 * m);
+J
 % =============================================================
 
 end

@@ -26,6 +26,8 @@ function h = H (X, theta)
 end
 % End of Internal Function
 
+alpha = 0.1;
+
 for j = 1:size(theta)
     Sum = 0;
     for i = 1:m
@@ -39,8 +41,10 @@ for i = 1:m
     Sum +=((-y(i) * log(H(X(i,:), theta))) - (1 - y(i)) * log(1-H(X(i,:), theta)));
 endfor
 
-J = 1 / m * Sum
+J = 1 / m * Sum;
 
+J
+grad
 % =============================================================
 
 end

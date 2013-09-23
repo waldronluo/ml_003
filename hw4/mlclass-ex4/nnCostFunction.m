@@ -62,25 +62,37 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+A1 = [ones(size(X ,1),1), X];
+Z2 = A1 * Theta1';
+A2 = sigmoid (Z2);
+
+A2 = [ones(size(A2,1),1), A2];
+
+Z3 = A2 * Theta2';
+A3 = sigmoid (Z3);
+
+size (A1)
+size (A2)
+size (A3)
 
 
 
+results = zeros (10,m);
 
 
+% initialize the result
+for i = 1:m
+    results (y(i), i) = 1;
+endfor
 
+% Now compute the cost Function
+J = trace( ...
+    (double) (- log (A3) * results - log(1 - A3) * (1 - results)) ...
+) / m;
+Theta1 (:,1) = 0;
+Theta2 (:,1) = 0;
+J = J + ((double)(sum (sum (Theta1 .^ 2)) + sum (sum (Theta2 .^ 2))) * lambda / (2 * m));
 
-
-
-
-
-
-
-
-
-
-
-
-% -------------------------------------------------------------
 
 % =========================================================================
 

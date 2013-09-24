@@ -62,40 +62,91 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
-A1 = [ones(size(X ,1),1), X];
-Z2 = A1 * Theta1';
-A2 = sigmoid (Z2);
+%======================= Inner Function for CostFunc =========
+%
+function J = CostFunc (X, y, Theta1, Theta2, lambda)
+    m = size (X, 1);
+	A1 = [ones(size(X ,1),1), X];
+	Z2 = A1 * Theta1';
+	A2 = sigmoid (Z2);
+	
+	A2 = [ones(size(A2,1),1), A2];
+	
+	Z3 = A2 * Theta2';
+	A3 = sigmoid (Z3);
+	
+	results = zeros (size(Theta2)(1),m);
+	% size (Theta2)
+	
+	% initialize the result
+	for i = 1:m
+	    results (y(i), i) = 1;
+	endfor
+	
+	% Now compute the cost Function
+	J = trace( ...
+	    (double) (- log (A3) * results - log(1 - A3) * (1 - results)) ...
+	) / m;
+	Theta1 (:,1) = 0;
+	Theta2 (:,1) = 0;
+	J = J + ((double)(sum (sum (Theta1 .^ 2)) + sum (sum (Theta2 .^ 2))) * lambda / (2 * m));
+end
+%=============================================================
 
-A2 = [ones(size(A2,1),1), A2];
+J = CostFunc (X, y, Theta1, Theta2, lambda);
 
-Z3 = A2 * Theta2';
-A3 = sigmoid (Z3);
+%=============================================================
+% Testing thetas
+%size(Theta1)
+%if (size(Theta1) != [25,401])
+%    Theta1
+%    Theta2
+%    pause
+%endif
 
-size (A1)
-size (A2)
-size (A3)
+% Initial delta
+D_1 = zeros (size(Theta1)(2),1);
+D_2 = zeros (size(Theta2)(2),1);
+D_1 = D_1(2:end);
+D_2 = D_2(2:end);
+pause
+for t = 1:m
+    
+    %feed forward 
+    a_1 = X(t,:);
+    a_1 = [1; a_1'];
+    z_2 = Theta1 * a_1;
+    a_2 = sigmoid (z_2);
+    a_2 = [1;a_2];
+    z_3 = Theta2 * a_2;
+    a_3 = sigmoid (z_3);
 
+    %Initial result vector
+    y_arr = zeros (size(Theta2)(1), 1);
+    y_arr (y(t)) = 1;
 
+    %compute the error
+    Err_3 = a_3 - y_arr;
+    size(Err_3)
+    size(Theta2)
+    Err_2 = (Theta2' * Err_3)(2:end) .* sigmoidGradient(z_2)
+    
+    %compute D
 
-results = zeros (10,m);
-
-
-% initialize the result
-for i = 1:m
-    results (y(i), i) = 1;
+    pause; 
 endfor
 
-% Now compute the cost Function
-J = trace( ...
-    (double) (- log (A3) * results - log(1 - A3) * (1 - results)) ...
-) / m;
-Theta1 (:,1) = 0;
-Theta2 (:,1) = 0;
-J = J + ((double)(sum (sum (Theta1 .^ 2)) + sum (sum (Theta2 .^ 2))) * lambda / (2 * m));
+
+
+
+
+
+
+
+
 
 
 % =========================================================================
-
 % Unroll gradients
 grad = [Theta1_grad(:) ; Theta2_grad(:)];
 

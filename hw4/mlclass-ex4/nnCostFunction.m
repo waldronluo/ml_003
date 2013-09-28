@@ -63,7 +63,6 @@ Theta2_grad = zeros(size(Theta2));
 %
 
 %======================= Inner Function for CostFunc =========
-%
 function J = CostFunc (X, y, Theta1, Theta2, lambda)
     m = size (X, 1);
 	A1 = [ones(size(X ,1),1), X];
@@ -93,6 +92,13 @@ function J = CostFunc (X, y, Theta1, Theta2, lambda)
 end
 %=============================================================
 
+
+
+
+
+
+%======================= Begining of this Func ==============
+
 J = CostFunc (X, y, Theta1, Theta2, lambda);
 
 %=============================================================
@@ -105,11 +111,9 @@ J = CostFunc (X, y, Theta1, Theta2, lambda);
 %endif
 
 % Initial delta
-D_1 = zeros (size(Theta1)(2),1);
-D_2 = zeros (size(Theta2)(2),1);
-D_1 = D_1(2:end);
-D_2 = D_2(2:end);
-pause
+Delta_1 = zeros (size(Theta1));
+Delta_2 = zeros (size(Theta2));
+
 for t = 1:m
     
     %feed forward 
@@ -127,24 +131,35 @@ for t = 1:m
 
     %compute the error
     Err_3 = a_3 - y_arr;
-    size(Err_3)
-    size(Theta2)
-    Err_2 = (Theta2' * Err_3)(2:end) .* sigmoidGradient(z_2)
+    Err_2 = (Theta2' * Err_3)(2:end) .* sigmoidGradient(z_2);
+
+%    size (Err_3)
+%    size (Err_2)
     
     %compute D
+    Delta_1 = Delta_1 + Err_2 * a_1';
+    Delta_2 = Delta_2 + Err_3 * a_2';
+    
+%    Delta_1(:,1) = 0;
+%    Delta_2(:,1) = 0;
 
-    pause; 
+    %================
+    % size (Err_3)
+    % size (Err_2)
+    % size (Theta1)
+    % size (Theta2)
+    % size (a_2)
+    % size (a_1)
+    % size (Err_3 * a_2')
+    % size (Err_2 * a_1')
+    %================ 
 endfor
 
+D_1 = Delta_1 ./ m + [zeros(size(Theta1)(1), 1) Theta1(:,2:end)] .* lambda ./ m ;
+D_2 = Delta_2 ./ m + [zeros(size(Theta2)(1), 1) Theta2(:,2:end)] .* lambda ./ m ;
 
-
-
-
-
-
-
-
-
+Theta1_grad = D_1;
+Theta2_grad = D_2;
 
 % =========================================================================
 % Unroll gradients

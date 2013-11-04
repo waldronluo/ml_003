@@ -55,5 +55,5 @@ h = imagesc(display_array, [-1 1]);
 axis image off
 
 drawnow;
-
+saveas(gcf,"example", "jpg");
 end
